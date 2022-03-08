@@ -25,8 +25,18 @@ class Ostoskori:
         return yhteensa
 
     def lisaa_tuote(self, lisattava: Tuote):
-        # lisää tuotteen
-        self.ostoskori.append(Ostos(lisattava))
+        tuotetta_ei_ole_korissa = True
+        # tarkistetaan onko tuote jo ostoskorissa
+        for ostos in self.ostoskori:
+            # jos tuote on korissa, muutetaan sen lukumäärää
+            if ostos.tuotteen_nimi() == lisattava.nimi():
+                indeksi = self.ostoskori.index(ostos)
+                self.ostoskori[indeksi].muuta_lukumaaraa(1)
+                tuotetta_ei_ole_korissa = False
+                break
+        # jos tuotetta ei ole korissa, lisätään tuote koriin
+        if tuotetta_ei_ole_korissa:
+            self.ostoskori.append(Ostos(lisattava))
 
     def poista_tuote(self, poistettava: Tuote):
         # poistaa tuotteen
