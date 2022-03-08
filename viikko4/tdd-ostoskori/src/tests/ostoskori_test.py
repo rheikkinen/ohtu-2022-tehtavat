@@ -92,3 +92,11 @@ class TestOstoskori(unittest.TestCase):
         ostos = self.kori.ostokset()[0]
         # varmistetaan, että koriin lisätyn ostoksen lukumäärä on 1
         self.assertEqual(ostos.lukumaara(), 1)
+
+    def test_jos_koriin_lisatty_yksi_tuote_poistetaan_kori_on_sen_jalkeen_tyhja(self):
+        # lisätään tuote koriin
+        self.kori.lisaa_tuote(self.leipa)
+        # poistetaan lisätty tuote korista
+        self.kori.poista_tuote(self.leipa)
+        # varmistetaan, että kori on nyt tyhjä
+        self.assertEqual(len(self.kori.ostokset()), 0)
