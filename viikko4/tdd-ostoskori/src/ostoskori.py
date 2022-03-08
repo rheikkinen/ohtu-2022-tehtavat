@@ -49,10 +49,9 @@ class Ostoskori:
                     ostos.muuta_lukumaaraa(-1)
                 break
                     
-
     def tyhjenna(self):
-        pass
         # tyhjentää ostoskorin
+        self.ostoskori.clear()
 
     def ostokset(self):
         # palauttaa listan jossa on korissa olevat ostos-oliot
