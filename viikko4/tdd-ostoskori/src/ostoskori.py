@@ -25,35 +25,36 @@ class Ostoskori:
         return yhteensa
 
     def lisaa_tuote(self, lisattava: Tuote):
-        tuotetta_ei_ole_korissa = True
-        # tarkistetaan onko tuote jo ostoskorissa
-        for ostos in self.ostoskori:
-            # jos tuote on korissa, muutetaan sen lukumäärää
-            if ostos.tuotteen_nimi() == lisattava.nimi():
-                indeksi = self.ostoskori.index(ostos)
-                self.ostoskori[indeksi].muuta_lukumaaraa(1)
-                tuotetta_ei_ole_korissa = False
-                break
-        # jos tuotetta ei ole korissa, lisätään tuote koriin
-        if tuotetta_ei_ole_korissa:
+        # lisää tuotteen ostoskoriin, jos sitä ei vielä ole korissa
+        # kasvattaa tuotteen lukumäärää, jos tuote on jo korissa
+        ostos = self.hae_ostos(lisattava)
+        if ostos:
+            ostos.muuta_lukumaaraa(1)
+        else:
             self.ostoskori.append(Ostos(lisattava))
 
     def poista_tuote(self, poistettava: Tuote):
-        # poistaa tuotteen
-        for ostos in self.ostoskori:
-            if ostos.tuotteen_nimi() == poistettava.nimi():
-                indeksi = self.ostoskori.index(ostos)
-                if ostos.lukumaara() == 1:
-                    del self.ostoskori[indeksi]
-                else:
-                    ostos.muuta_lukumaaraa(-1)
-                break
+        # poistaa tuotteen, jos sitä on korissa vain yksi kpl
+        # vähentää tuotteen lukumäärää, jos tuotetta on korissa useampi kpl
+        ostos = self.hae_ostos(poistettava)
+        if ostos:
+            if ostos.lukumaara() == 1:
+                del self.ostoskori[self.ostoskori.index(ostos)]
+            else:
+                ostos.muuta_lukumaaraa(-1)
                     
     def tyhjenna(self):
         # tyhjentää ostoskorin
         self.ostoskori.clear()
 
     def ostokset(self):
-        # palauttaa listan jossa on korissa olevat ostos-oliot
-        # kukin ostos-olio siis kertoo mistä tuotteesta on kyse JA kuinka monta kappaletta kyseistä tuotetta korissa on
+        # palauttaa listan jossa on korissa olevat Ostos-oliot
+        # kukin Ostos-olio siis kertoo mistä tuotteesta on kyse JA kuinka monta kappaletta kyseistä tuotetta korissa on
         return self.ostoskori
+
+    def hae_ostos(self, tuote: Tuote):
+        # palauttaa Ostos-olion, jos se on korissa, muuten palauttaa None
+        for ostos in self.ostoskori:
+            if ostos.tuotteen_nimi() == tuote.nimi():
+                return ostos
+        return None
