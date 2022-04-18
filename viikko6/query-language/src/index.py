@@ -9,17 +9,43 @@ def main():
     stats = Statistics(reader)
 
     query = QueryBuilder()
-    matcher = (
-        query
-        .hasAtLeast(10, "goals")
-        .hasFewerThan(20, "assists")
-        .playsIn("BOS")
+
+    q1 = (
+       query
+        .playsIn("PHI")
+        .hasAtLeast(10, "assists")
+        .hasFewerThan(5, "goals")
         .build()
     )
+
+    q2 = (
+        query
+        .playsIn("EDM")
+        .hasAtLeast(40, "points")
+        .build()
+    )
+
+    matcher = query.oneOf(q1, q2).build()
     
+    matcher2 = (
+        query
+        .oneOf(
+        query.playsIn("PHI")
+            .hasAtLeast(10, "assists")
+            .hasFewerThan(5, "goals")
+            .build(),
+        query.playsIn("EDM")
+            .hasAtLeast(40, "points")
+            .build()
+        )
+        .build()
+    )
+
     for player in stats.matches(matcher):
         print(player)
-
+    print("---------------")
+    for player in stats.matches(matcher2):
+        print(player)
 
 if __name__ == "__main__":
     main()
