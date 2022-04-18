@@ -20,6 +20,17 @@ class Not:
 
         return False
 
+class Or:
+    def __init__(self, *matchers):
+        self._matchers = matchers
+
+    def matches(self, player):
+        for matcher in self._matchers:
+            if matcher.matches(player):
+                return True
+
+        return False
+
 class PlaysIn:
     def __init__(self, team):
         self._team = team
